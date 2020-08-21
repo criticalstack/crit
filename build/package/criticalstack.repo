@@ -1,0 +1,11 @@
+# /etc/yum.repos.d/criticalstack.repo
+[criticalstack_public]
+name=criticalstack_public
+baseurl=https://packagecloud.io/criticalstack/public/fedora/30/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/criticalstack/public/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300

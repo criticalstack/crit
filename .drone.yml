@@ -1,0 +1,43 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: fetch
+  image: alpine/git
+  commands:
+  - git fetch --tags
+
+- name: testing
+  image: golang:1.14
+  commands:
+  - make test
+
+- name: lint
+  image: golang:1.14
+  commands:
+  - make lint
+
+- name: release
+  image: golang:1.14
+  volumes:
+  - name: gocache
+    path: /go
+  when:
+    branch:
+    - master
+    event:
+    - tag
+  environment:
+    GITHUB_TOKEN:
+      from_secret: github_token
+    PACKAGECLOUD_TOKEN:
+      from_secret: packagecloud_token
+  commands:
+  - curl -sL https://git.io/goreleaser | bash
+  - curl -F "package[distro_version_id]=190" -F "package[package_file]=@$(ls dist/crit_*_x86_64.deb)" https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/criticalstack/public/packages.json
+  - curl -F "package[distro_version_id]=204" -F "package[package_file]=@$(ls dist/crit_*_x86_64.rpm)" https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/criticalstack/public/packages.json
+
+volumes:
+- name: gocache
+  temp: {}

@@ -1,0 +1,15 @@
+global:
+  kubeProxyReplacement: disabled
+  autoDirectNodeRoutes: true
+  endpointRoutes:
+    enabled: true
+  containerRuntime:
+    integration: containerd
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: "kubernetes.io/arch"
+              operator: NotIn
+              values: ["wasm32-wasi", "wasm32-wascc"]

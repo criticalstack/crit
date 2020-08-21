@@ -1,0 +1,33 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/fedora-30"
+
+  config.vm.provision "file", source: "../scripts", destination: "/tmp/scripts"
+  config.vm.provision "file", source: "../../tools/containerd-sync/containerd-sync", destination: "/tmp/containerd-sync"
+  config.vm.provision :shell, :inline => "mv /tmp/containerd-sync /usr/bin/containerd-sync", privileged: true
+
+  config.vm.provision "shell" do |s|
+    s.privileged = true
+    s.inline = <<-SCRIPT
+/tmp/scripts/install-containerd.sh
+/tmp/scripts/install-cni.sh
+/tmp/scripts/install-k8s.sh --version 1.16.3
+/tmp/scripts/config-selinux.sh
+/tmp/scripts/install-disable-swap.sh
+/tmp/scripts/get-helm.sh
+/tmp/scripts/install-dev-tools.sh
+
+cat << EOF > /etc/systemd/system/containerd-sync.service
+[Unit]
+Description=containerd-sync
+
+[Service]
+ExecStart=/usr/bin/containerd-sync /tmp/images --watch
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+EOF
+SCRIPT
+  end
+end

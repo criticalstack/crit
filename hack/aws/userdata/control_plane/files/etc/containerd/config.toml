@@ -1,0 +1,26 @@
+# The "plugins.cri" table contains all of the server options.
+[plugins.cri]
+
+  # enable_selinux indicates to enable the selinux support.
+  enable_selinux = true
+
+  # disable_apparmor indicates to disable the apparmor support.
+  # This is useful when the daemon does not have permission to access apparmor.
+  disable_apparmor = false
+
+  # "plugins.cri.cni" contains config related to cni
+  [plugins.cri.cni]
+    # bin_dir is the directory in which the binaries for the plugin is kept.
+    bin_dir = "/opt/cni/bin"
+
+    # conf_dir is the directory in which the admin places a CNI conf.
+    conf_dir = "/etc/cni/net.d"
+
+  # "plugins.cri.registry" contains config related to the registry
+  [plugins.cri.registry]
+
+    # "plugins.cri.registry.mirrors" are namespace to mirror mapping for all namespaces.
+    [plugins.cri.registry.mirrors]
+      # this is the default docker.io endpoint, provided here for easy overriding
+      [plugins.cri.registry.mirrors."docker.io"]
+        endpoint = ["https://registry-1.docker.io"]

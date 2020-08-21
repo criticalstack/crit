@@ -1,0 +1,109 @@
+before:
+  hooks:
+  # Ensure that any go.mod modifications due to linters, go generate, etc are
+  # removed.
+  - go mod tidy
+  # Using Go modules intrinsically causes modifications to these files that are
+  # unfortunately unavoidable. Newer patch versions available to the CI will
+  # satisfy the same module requirements and cause additions to go.sum.
+  - git checkout -- go.sum
+  - git checkout -- hack/tools/go.sum
+builds:
+- id: crit
+  env:
+  - CGO_ENABLED=0
+  - GO111MODULE=on
+  main: ./cmd/crit
+  binary: crit
+  goarch:
+    - "386"
+    - amd64
+    - arm64
+  gcflags:
+    - all=-trimpath={{.Env.GOPATH}}
+  asmflags:
+    - all=-trimpath={{.Env.GOPATH}}
+  ldflags:
+     - -s -w
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.Date={{.Date}}"
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.GitSHA={{.ShortCommit}}"
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.Version={{.Tag}}"
+- id: cinder
+  env:
+  - CGO_ENABLED=0
+  - GO111MODULE=on
+  main: ./cmd/cinder
+  binary: cinder
+  gcflags:
+    - all=-trimpath={{.Env.GOPATH}}
+  asmflags:
+    - all=-trimpath={{.Env.GOPATH}}
+  ldflags:
+     - -s -w
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.Date={{.Date}}"
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.GitSHA={{.ShortCommit}}"
+     - -X "github.com/criticalstack/crit/pkg/buildinfo.Version={{.Tag}}"
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+nfpms:
+- file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+  package_name: criticalstack
+  homepage:  https://github.com/criticalstack/crit
+  description: A tool for bootstrapping Kubernetes
+  maintainer: criticalstack <dev@criticalstack.com>
+  license: Apache-2.0
+  vendor: criticalstack
+  bindir: "/usr/local/bin"
+  replacements:
+    amd64: x86_64
+  formats:
+  - deb
+  - rpm
+  conflicts:
+  - kubeadm
+  empty_folders:
+  - /etc/kubernetes
+  - /etc/kubernetes/pki
+  - /etc/kubernetes/pki/etcd
+  - /etc/containerd
+  - /etc/cni
+  - /etc/cni/net.d
+  - /etc/systemd/system/kubelet.service.d
+  files:
+    build/package/modules.conf: /etc/modules-load.d/crit-modules.conf
+    build/package/sysctl.conf: /etc/sysctl.d/crit-sysctl.conf
+    build/package/20-crit.conf: /etc/systemd/system/kubelet.service.d/20-crit.conf
+    build/package/disable-swap.service: /etc/systemd/system/disable-swap.service
+    build/package/containerd-config.toml: /etc/containerd/config.toml
+  config_files:
+  scripts:
+    postinstall: "build/package/postinstall.sh"
+    postremove: "build/package/postremove.sh"
+  overrides:
+    deb:
+      dependencies:
+      - cri-tools (>= 1.13.0)
+      - kubelet (>= 1.14.0)
+      recommends:
+      - containerd (>= 1.2.6)
+    rpm:
+      dependencies: 
+      - cri-tools >= 1.13.0
+      - kubelet >= 1.14.0
+      recommends:
+      - containerd >= 1.2.6
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'

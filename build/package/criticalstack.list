@@ -1,0 +1,3 @@
+# /etc/apt/sources.list.d/criticalstack.list 
+deb https://packagecloud.io/criticalstack/public/ubuntu/ bionic main
+deb-src https://packagecloud.io/criticalstack/public/ubuntu/ bionic main

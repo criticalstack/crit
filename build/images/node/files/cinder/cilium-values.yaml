@@ -1,0 +1,32 @@
+global:
+  kubeProxyReplacement: partial
+  hostServices:
+    enabled: false
+  externalIPs:
+    enabled: true
+  nodePort:
+    enabled: true
+  hostPort:
+    enabled: true
+  pullPolicy: IfNotPresent
+  #nodeinit:
+    #enabled: true
+  containerRuntime:
+    integration: containerd
+  hubble:
+    enabled: true
+    metrics:
+      enabled: {dns,drop,tcp,flow,port-distribution,icmp,http}
+    #listenAddress: ":4244"
+    #relay:
+      #enabled: true
+    #ui:
+      #enabled: true
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: "kubernetes.io/arch"
+              operator: NotIn
+              values: ["wasm32-wasi", "wasm32-wascc"]

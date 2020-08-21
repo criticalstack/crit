@@ -1,0 +1,9 @@
+# /etc/systemd/system/containers.slice
+# Creates a cgroup for kubelet
+[Unit]
+Description=Grouping resources slice for containers
+Documentation=man:systemd.special(7)
+DefaultDependencies=no
+Before=slices.target
+Requires=-.slice
+After=-.slice

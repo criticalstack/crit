@@ -1,0 +1,9 @@
+[book]
+authors = ["chris"]
+language = "en"
+multilingual = false
+src = "src"
+title = "The Critical Stack book"
+
+[output.html]
+default-theme = "ayu"
