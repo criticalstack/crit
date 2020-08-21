@@ -1,0 +1,28 @@
+fullnameOverride: coredns
+image:
+  tag: "{{ .CoreDNSVersion }}"
+service:
+  clusterIP: "{{ index .NodeConfiguration.KubeletConfiguration.ClusterDNS 0 }}"
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+  # This pod anti-affinity prevents more than one
+  # coredns pod to be scheduled on any given node
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: "k8s-app"
+              operator: In
+              values:
+                - "kube-dns"
+        topologyKey: "kubernetes.io/hostname"

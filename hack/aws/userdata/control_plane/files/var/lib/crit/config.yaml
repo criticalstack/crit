@@ -1,0 +1,33 @@
+apiVersion: crit.sh/v1alpha2
+kind: ControlPlaneConfiguration
+controlPlaneEndpoint: ${control_plane_endpoint}:6443
+featureGates:
+  BootstrapServer: true
+critBootstrapServer:
+  cloudProvider: aws
+  extraArgs:
+    filters: account-id=${account_id}
+kubeAPIServer:
+  featureGates:
+    CSINodeInfo: true
+    CSIDriverRegistry: true
+    CSIBlockVolume: true
+    VolumeSnapshotDataSource: true
+node:
+  cloudProvider: aws
+  kubernetesVersion: ${kubernetes_version}
+  kubelet:
+    featureGates:
+      CSINodeInfo: true
+      CSIDriverRegistry: true
+      CSIBlockVolume: true
+    kubeReserved:
+      cpu: 128m
+      memory: 64Mi
+    kubeReservedCgroup: /podruntime.slice
+    kubeletCgroups: /podruntime.slice
+    serverTLSBootstrap: false
+    systemReserved:
+      cpu: 128m
+      memory: 192Mi
+    systemReservedCgroup: /system.slice

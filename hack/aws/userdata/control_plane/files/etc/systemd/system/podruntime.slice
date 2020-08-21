@@ -1,0 +1,9 @@
+# /etc/systemd/system/podruntime.slice
+# Creates a cgroup for kubelet
+[Unit]
+Description=Limited resources slice for Kubelet service
+Documentation=man:systemd.special(7)
+DefaultDependencies=no
+Before=slices.target
+Requires=-.slice
+After=-.slice

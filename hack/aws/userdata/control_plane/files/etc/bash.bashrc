@@ -1,0 +1,10 @@
+alias k='kubectl'
+alias gp='kubectl get pods --all-namespaces'
+alias gn='kubectl get nodes'
+alias gnw='kubectl get nodes -o wide'
+alias si='sudo -i'
+alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
+alias ll='ls -lhaF'
+alias setns='kubectl config set-context --current --namespace'
+alias jc='journalctl --no-tail -xeu'
+complete -F __start_kubectl k

@@ -1,0 +1,8 @@
+[Unit]
+After=local-fs.target
+
+[Service]
+ExecStart=/sbin/swapoff -a
+
+[Install]
+WantedBy=multi-user.target

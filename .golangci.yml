@@ -1,0 +1,10 @@
+linters:
+  # Run with --fast=false for more extensive checks
+  fast: true
+issues:
+  max-same-issues: 0
+  max-issues-per-linter: 0
+run:
+  deadline: 2m
+  timeout: 5m
+  tests: false

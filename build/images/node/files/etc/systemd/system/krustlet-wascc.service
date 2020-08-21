@@ -1,0 +1,13 @@
+[Unit]
+Description=Krustlet: The Kubernetes Kubelet in Rust for running WASM
+Documentation=https://github.com/deislabs/krustlet
+
+[Service]
+EnvironmentFile=-/var/lib/krustlet/config-wascc.env
+ExecStart=/usr/bin/krustlet-wascc
+Restart=always
+StartLimitInterval=0
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

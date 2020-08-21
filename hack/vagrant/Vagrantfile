@@ -1,0 +1,85 @@
+$control_count = 1
+$control_vm_memory = 4096
+$worker_count = 1
+$worker_vm_memory = 1024
+
+def control_ip(num)
+  return "192.168.50.#{num+50}"
+end
+
+
+def worker_ip(num)
+  return "192.168.50.#{num+100}"
+end
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "crit"
+
+  config.vm.synced_folder "./.cache", "/tmp/images", create: true
+
+  config.vm.network "forwarded_port", guest: 6443, host: 6443, auto_correct: true
+  config.vm.network "forwarded_port", guest: 30000, host: 30000, auto_correct: true
+
+  config.vm.provision "file", source: "../../bin/crit", destination: "/tmp/crit"
+  config.vm.provision :shell, :inline => "mv /tmp/crit /usr/bin/crit", privileged: true
+  config.vm.provision "shell", inline: "swapoff -a"
+
+  (1..$control_count).each do |i|
+    config.vm.define vm_name = "c%d" % i do |control|
+      control.vm.hostname = vm_name
+
+      control.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", $control_vm_memory]
+        vb.customize ["modifyvm", :id, "--cpus", "2"]
+      end
+
+      control.vm.network :private_network, ip: control_ip(i)
+
+      control.vm.provision "file", source: ".pki", destination: "/tmp/pki"
+      control.vm.provision "file", source: "userdata/control.sh", destination: "/tmp/userdata.sh"
+      control.vm.provision :shell, :inline => "mkdir -p /etc/kubernetes/pki && mv /tmp/pki/* /etc/kubernetes/pki/", privileged: true
+
+      control.vm.provision "shell" do |s|
+        s.privileged = true
+        s.inline = "/tmp/userdata.sh"
+        if $control_count > 1
+          s.inline += " > /var/log/crit.log 2>&1 &"
+        end
+        s.env = {
+          "CONTROL_PLANE_HOST": control_ip(i),
+          "ETCD_CLUSTER_SIZE": $control_count,
+          "PEERS": [*1..$control_count].map{ |i| control_ip(i) + ":7980" }.join(","),
+        }
+      end
+
+    end
+  end
+
+  (1..$worker_count).each do |i|
+    config.vm.define vm_name = "w%d" % i do |worker|
+      worker.vm.hostname = vm_name
+
+      worker.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", $worker_vm_memory]
+        vb.customize ["modifyvm", :id, "--cpus", "1"]
+      end
+
+      worker.vm.network :private_network, ip: worker_ip(i)
+
+      worker.vm.provision "file", source: ".pki/ca.crt", destination: "/tmp/pki/ca.crt"
+      worker.vm.provision "file", source: "userdata/worker.sh", destination: "/tmp/userdata.sh"
+      worker.vm.provision :shell, :inline => "mkdir -p /etc/kubernetes/pki && mv /tmp/pki/* /etc/kubernetes/pki/", privileged: true
+
+      worker.vm.provision "shell" do |s|
+        s.privileged = true
+        s.inline = "/tmp/userdata.sh"
+        s.env = {
+          "CONTROL_PLANE_HOST": control_ip(i),
+          "WORKER_HOST_IP": worker_ip(i),
+        }
+      end
+
+    end
+  end
+
+end

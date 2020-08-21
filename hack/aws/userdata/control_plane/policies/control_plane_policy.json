@@ -1,0 +1,29 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:GetDesiredCapacity",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "autoscaling:UpdateAutoScalingGroup",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DescribeVolumesModifications",
+        "ec2:TerminateInstances",
+        "ec2:RunInstances",
+        "ec2:DescribeTags",
+        "iam:GetInstanceProfile",
+        "iam:GetRole",
+        "iam:PassRole",
+        "s3:*",
+        "sts:*",
+        "route53:ChangeResourceRecordSets",
+        "route53:ListHostedZones",
+        "route53:ListHostedZonesByName"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

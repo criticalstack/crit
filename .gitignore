@@ -1,0 +1,41 @@
+bin/
+cmd/bootstrap-server/bootstrap-server
+
+
+# kubeconfig files
+admin.conf
+.kube/
+
+# ignore Go testing fixtures
+testdata
+
+*.crt
+*.key
+
+# vagrant files
+*.box
+.vagrant/
+
+# terraform state files
+terraform.tfstate*
+terraform.tfplan
+.terraform*
+terraform.tfvars
+terraform.tfvars.json
+
+packer_cache/
+
+# tools
+hack/*/.cache/
+tools/containerd-sync/containerd-sync
+tools/genconf/genconf
+
+dist/
+vendor/
+
+# book
+docs/book
+
+*.tgz
+*.tar
+*.tar.gz
