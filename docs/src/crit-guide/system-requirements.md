@@ -16,6 +16,6 @@ _Newer versions of the kernel will enable using cilium's kube-proxy replacement 
 
 ### References
 
- * https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni
- * https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#support-hostport
- * https://docs.cilium.io/en/v1.6/gettingstarted/cni-chaining-portmap/#portmap-hostport
+ * [https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni)
+ * [https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#support-hostport](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#support-hostport)
+ * [https://docs.cilium.io/en/v1.6/gettingstarted/cni-chaining-portmap/#portmap-hostport](https://docs.cilium.io/en/v1.6/gettingstarted/cni-chaining-portmap/#portmap-hostport)
