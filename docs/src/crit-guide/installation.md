@@ -5,7 +5,7 @@
 Run the following in your terminal to download the latest version of crit:
 
 ```sh
-curl -sSf https://get.crit.sh | sh
+curl -sSfL https://get.crit.sh | sh
 ```
 
 ### Install From Packagecloud.io

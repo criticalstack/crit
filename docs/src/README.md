@@ -12,7 +12,7 @@ It is designed to be used within automated scripting (i.e. non-interactive). Man
 The easiest way to install:
 
 ```sh
-curl -sSf https://get.crit.sh | sh
+curl -sSfL https://get.crit.sh | sh
 ```
 
 Pre-built binaries are also available in [Releases](https://github.com/criticalstack/crit/releases/latest). Crit is written in Go so it is also pretty simple to install via go:
