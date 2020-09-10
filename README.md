@@ -7,3 +7,5 @@
 More information on usage can be found in our [Book](https://docs.crit.sh).
 
 ## Contributing
+
+Sign the CLA.
