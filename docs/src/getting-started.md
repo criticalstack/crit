@@ -10,7 +10,7 @@ $ cinder create cluster
 
 This quickly creates a ready-to-use Kubernetes cluster running completely within a single Docker container.
 
-Cinder, or Crit-in-Docker, can be useful for developing on Critial Stack clusters locally, or simply to learn more about Crit. You can read more about requirements, configuration, etc over in the [Cinder Guide](cinder-guide/overview.md).
+Cinder, or Crit-in-Docker, can be useful for developing on Critical Stack clusters locally, or simply to learn more about Crit. You can read more about requirements, configuration, etc over in the [Cinder Guide](cinder-guide/overview.md).
 
 ## Running in Production
 
