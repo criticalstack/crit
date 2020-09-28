@@ -2,7 +2,6 @@
 
 ## Configure the Kubernetes API Server
 
-The Kubernetes API server can be configured to trust a single 
 The Kubernetes API server can be configured with [OpenID Connect](https://openid.net/connect/) to use an existing OpenID Identity Provider. It can only trust a single issuer and until the API server can be [configured with component configs](https://github.com/kubernetes/enhancements/blob/master/keps/sig-cluster-lifecycle/wgs/0014-20180707-componentconfig-api-types-to-staging.md#kube-apiserver-changes) it must be specified in the Crit config as command-line arguments:
 
 ```yaml

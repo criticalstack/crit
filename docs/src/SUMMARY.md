@@ -18,6 +18,7 @@
     - [Bootstrap Token](crit-guide/bootstrap-token.md)
     - [Bootstrap Server](crit-guide/bootstrap-server.md)
   - [Configuring Control Plane Components](crit-guide/configuring-control-plane-components.md)
+  - [Running crit up](crit-guide/running-crit-up.md)
   - [Installing a CNI](crit-guide/installing-a-cni.md)
   - [Installing a Storage Driver](crit-guide/installing-a-storage-driver.md)
   - [Configuring Authentication](crit-guide/configuring-authentication.md)

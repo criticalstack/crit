@@ -13,6 +13,7 @@ This guide will take you through all of the typical configuration use cases that
    - [Bootstrap Token](bootstrap-token.md)
    - [Bootstrap Server](bootstrap-server.md)
  - [Configuring Control Plane Components](configuring-control-plane-components.md)
+ - [Running crit up](running-crit-up.md)
  - [Installing a CNI](installing-a-cni.md)
  - [Installing a Storage Driver](installing-a-storage-driver.md)
  - [Configuring Authentication](configuring-authentication.md)
