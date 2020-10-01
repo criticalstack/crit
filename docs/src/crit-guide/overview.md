@@ -16,6 +16,8 @@ This guide will take you through all of the typical configuration use cases that
    - [Bootstrap Server](bootstrap-server.md)
  - [Configuring Control Plane Components](configuring-control-plane-components.md)
  - [Running crit up](running-crit-up.md)
+   - [crit up on Control Plane Node](crit-up-master-node.md)
+   - [crit up on Worker Node](crit-up-worker-node.md)
  - [Installing a CNI](installing-a-cni.md)
  - [Installing a Storage Driver](installing-a-storage-driver.md)
  - [Configuring Authentication](configuring-authentication.md)
