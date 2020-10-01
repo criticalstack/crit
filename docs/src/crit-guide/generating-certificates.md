@@ -17,7 +17,7 @@ Etcd certificates can be generated using our [e2d](https://github.com/criticalst
 
 ### Generating Certificates and Kubeconfigs for Kubernetes Components 
 
-The following certificates and kubeconfigs can be created with crit. See the [`crit up` command](). 
+The following certificates and kubeconfigs can be created with crit. See the [`crit up` command](/crit-commands/crit-up.md).
 
 ```sh
 /etc/kubernetes/
