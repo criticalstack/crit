@@ -3,7 +3,11 @@ package lockfile
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"time"
+
+	"github.com/criticalstack/crit/pkg/log"
+	"go.uber.org/zap"
 )
 
 type Lock struct {
@@ -11,6 +15,10 @@ type Lock struct {
 }
 
 func New(name string) *Lock {
+	err := os.MkdirAll(filepath.Dir(name), 0755)
+	if err != nil {
+		log.Error("cannot MkdirAll for lockfile", zap.Error(err), zap.String("filename", name))
+	}
 	return &Lock{name: name}
 }
 
