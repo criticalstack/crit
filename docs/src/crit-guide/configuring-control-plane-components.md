@@ -1,6 +1,7 @@
 # Configuring Control Plane Components
 
 See [here](https://pkg.go.dev/github.com/criticalstack/crit@v1.0.1/pkg/config/v1alpha2#ControlPlaneConfiguration) for a complete list of available configuration options.
+
 ## Control plane endpoint
 
 The control plane endpoint is the address (IP or DNS), along with optional port, that represents the control plane. It it is effectively the API server address, however, it is internally used for a few other purposes, such as:
@@ -55,7 +56,6 @@ node:
 ```
 
 The `kubeAPIServer`, `kubeControllerManager`, `kubeScheduler`, and `kubelet` all have feature gates that can be configured. More info is available in the [Kubernetes docs](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/).
-
 
 ## Configuring Pod/Service Subnets
 
@@ -119,5 +119,3 @@ node:
 ```
 
 A manifest specific to cloud environment must then be applied to run the external [cloud controller manager](https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/#examples). 
-
-

@@ -8,4 +8,3 @@ Running `crit up` with a [worker configuration](bootstrapping-a-worker.md
 |WriteBootstrapKubeletConfig | Write kubelet boostrap kubeconfig |
 |WriteKubeletConfigs | Write kubelet settings |
 |StartKubelet | Start Kubelet using systemd |
-

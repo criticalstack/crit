@@ -2,7 +2,7 @@
 
 For an overview of the certificates Kubernetes requires and how they are used, see [here](https://kubernetes.io/docs/setup/best-practices/certificates/). 
 
-### Generating a Cluster CA
+## Cluster CA
 
 To generate the cluster CA and private key: 
 
@@ -11,11 +11,11 @@ crit certs init --cert-dir /etc/kubernetes/pki
 
 ```
 
-### Generating Certificates for Etcd
+## Certificates for Etcd
 
 Etcd certificates can be generated using our [e2d](https://github.com/criticalstack/e2d) tool. See [e2d pki](https://github.com/criticalstack/e2d#generating-certificates).
 
-### Generating Certificates and Kubeconfigs for Kubernetes Components 
+## Certificates and Kubeconfigs for Kubernetes Components 
 
 The following certificates and kubeconfigs can be created with crit. See the [`crit up` command](/crit-commands/crit-up.md).
 

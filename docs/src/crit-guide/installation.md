@@ -24,6 +24,7 @@ Fedora:
 dnf config-manager --add-repo https://packagecloud.io/criticalstack/public/fedora
 dnf install -y criticalstack e2d
 ```
+
 ### Install from GH releases
 
 Download a binary release from [https://github.com/criticalstack/crit/releases/latest](https://github.com/criticalstack/crit/releases/latest) suitable for your system and then install, for example:
@@ -42,4 +43,3 @@ curl -sLO https://raw.githubusercontent.com/criticalstack/crit/master/build/pack
 mv 20-crit.conf /etc/systemd/system/kubelet.service.d/
 systemctl daemon-reload
 ```
-
