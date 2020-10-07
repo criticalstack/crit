@@ -3,14 +3,24 @@ package lockfile
 import (
 	"context"
 	"os"
+	"path/filepath"
 	"time"
+
+	"go.uber.org/zap"
+
+	"github.com/criticalstack/crit/pkg/log"
 )
 
 type Lock struct {
 	name string
 }
 
+// New takes a path and creates a new instance of Lock. It should only be given
+// a relative or absolute filepath.
 func New(name string) *Lock {
+	if err := os.MkdirAll(filepath.Dir(name), 0755); err != nil {
+		log.Error("cannot MkdirAll for lockfile", zap.Error(err), zap.String("filename", name))
+	}
 	return &Lock{name: name}
 }
 
