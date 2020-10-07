@@ -1,4 +1,3 @@
-
 Running `crit up` with a [control plane configuration](configuring-control-plane-components.md
 ) perfoms the following steps:
 
@@ -19,7 +18,3 @@ Running `crit up` with a [control plane configuration](configuring-control-plane
 |EnableCSRApprover | Add RBAC to allow csrapprover to boostrap nodes 
 |MarkControlPlane | Add taint to control plane node
 |UploadInfo | Upload crit config map that holds info regarding the cluster
-
-
-
-

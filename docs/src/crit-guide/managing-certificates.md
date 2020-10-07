@@ -1,6 +1,5 @@
 # Managing Certificates
 
-
 ## Check Certificate Expiration
 
 You can use the `crit certs list` command to check when certificates expire: 
@@ -22,7 +21,6 @@ apiserver-healthcheck-client	system:basic-info-viewer	364d	2021-09-29T23:54:16Z
 front-proxy-client		front-proxy-client		364d	2021-09-29T23:54:17Z
 ```
 
-
 ## Rotating Certificates
 
 There are several different solutions pertaining to certificate rotation. The appropriate solution greatly depends on an organization's use case. Some things to consider:
@@ -31,7 +29,6 @@ There are several different solutions pertaining to certificate rotation. The ap
 * Can certificate approval and signing be automated, or does it require a cluster administrator?
 * How often do certificates need to be rotated?
 * How many clusters need to be supported?
-
 
 ### Rotating with Crit
 
@@ -48,4 +45,3 @@ The kubelet certificate [can be automatically renewed](https://kubernetes.io/doc
 #### Advanced Certificate Rotation
 
 Organizations that require an automated certificate rotation solution that integrates with existing certificate infrastructure should consider projects like [cert-manager](https://cert-manager.io/docs/installation/kubernetes/). 
-
