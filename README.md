@@ -1,4 +1,5 @@
 [![Build Status](https://cloud.drone.io/api/badges/criticalstack/crit/status.svg)](https://cloud.drone.io/criticalstack/crit)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/criticalstack/crit)](https://pkg.go.dev/github.com/criticalstack/crit)
 
 <img src="./docs/src/images/crit-logo-md.png" width=480>
 
