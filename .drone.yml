@@ -25,7 +25,7 @@ steps:
     path: /go
   when:
     branch:
-    - master
+    - main
     event:
     - tag
   environment:
