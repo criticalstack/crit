@@ -1,0 +1,40 @@
+name: Build and push cinder image
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.13.1' # The Go version to download (if necessary) and use.
+
+      - name: Install helm
+        run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Get the version
+        id: vars
+        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+
+      - name: Build the cinder image
+        run: |
+          export TAG=${{steps.vars.outputs.tag}}
+          cd build/images/node
+          make build
+
+      - name: Push the cinder image
+        run: |
+          docker push docker.io/criticalstack/cinder:${{steps.vars.outputs.tag}}
