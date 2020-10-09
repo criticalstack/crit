@@ -37,28 +37,6 @@ steps:
   commands:
   - git fetch --tags
 
-- name: publish-image
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: gocache
-    path: /go
-  environment:
-    DOCKER_USERNAME:
-      from_secret: docker_username
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    TAG: ${DRONE_TAG}
-  commands:
-    - |
-      apk update && apk add --no-cache curl make git go bash
-      curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | ash
-      /usr/local/bin/dockerd-entrypoint.sh &
-      while [ ! -S /var/run/docker.sock ]; do echo "waiting for docker..."; sleep 2; done
-      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      cd build/images/node && make build
-      docker push docker.io/criticalstack/cinder:${TAG}
-
 - name: release
   image: golang:1.14
   volumes:
