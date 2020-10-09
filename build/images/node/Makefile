@@ -18,7 +18,7 @@ $(CINDER): # Build cinder
 	$(MAKE) -s -C ../../../ cinder BIN_DIR=$(PWD)/$(BIN_DIR)
 
 
-TAG   ?= v1.0.0-beta.10
+TAG   ?= latest
 IMAGE ?= docker.io/criticalstack/cinder:$(TAG)
 
 BUILD_DIR             := $(PWD)/build
@@ -35,6 +35,12 @@ MACHINE_API_PROVIDER_DOCKER_VERSION := 0.1.2
 
 charts/*.tgz:
 	mkdir -p $(CHARTS_DIR)
+	helm repo add stable https://kubernetes-charts.storage.googleapis.com
+	helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+	helm repo add criticalstack https://charts.cscr.io/criticalstack
+	helm repo add traefik https://containous.github.io/traefik-helm-chart
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo add cilium https://helm.cilium.io/
 	helm repo update
 	helm pull cilium/cilium --version $(CILIUM_VERSION) -d $(CHARTS_DIR)
 	helm pull criticalstack/local-path-provisioner --version $(LOCAL_PATH_PROVISIONER_VERSION) -d $(CHARTS_DIR)
@@ -47,7 +53,7 @@ charts/*.tgz:
 
 build/*.tar:
 	mkdir -p $(BUILD_DIR)
-	for image in $$(cinder get images)
+	for image in $$($(CINDER) get images)
 	do
 	    docker pull $$image
 	    filename=$$(echo $$image | sed -e 's/[^A-Za-z0-9._-]/_/g').tar
