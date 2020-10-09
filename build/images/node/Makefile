@@ -78,7 +78,7 @@ build: clean $(CRIT) $(CINDER) charts/*.tgz build/*.tar ## build cinder docker i
 	docker exec $(BUILD_CONTAINER_NAME) bash -c 'nohup containerd > /dev/null 2>&1 &'
 	for f in $$(find build/ -name '*.tar')
 	do
-	    docker exec $(BUILD_CONTAINER_NAME) ctr --namespace=k8s.io images import --all-platforms --no-unpack /build/$${f##*build/}
+	    docker exec $(BUILD_CONTAINER_NAME) ctr --namespace=k8s.io images import --all-platforms --no-unpack build/$${f##*build/}
 	done
 	docker exec $(BUILD_CONTAINER_NAME) pkill containerd
 	docker commit --change 'ENTRYPOINT [ "/usr/local/bin/entrypoint", "/sbin/init" ]' $(BUILD_CONTAINER_NAME) $(IMAGE)

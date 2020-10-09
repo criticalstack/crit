@@ -1,0 +1,37 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version
+      - image: circleci/golang:1.13
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+    working_directory: /go/src/github.com/criticalstack/crit
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          #docker_layer_caching: true
+      #- run:
+          #name: Install packages
+          #command: apt-get update && apt-get add curl make git go bash
+      - run:
+          name: Install helm
+          command: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      - run: |
+          export TAG=$(git describe --tags | grep -o '^[^-]\+')
+          cd build/images/node
+          make build
+          docker push docker.io/criticalstack/cinder:$TAG
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
