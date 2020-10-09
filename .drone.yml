@@ -3,31 +3,67 @@ type: docker
 name: default
 
 steps:
-- name: fetch
-  image: alpine/git
-  commands:
-  - git fetch --tags
-
 - name: testing
   image: golang:1.14
+  volumes:
+  - name: gocache
+    path: /go
   commands:
   - make test
 
 - name: lint
   image: golang:1.14
+  volumes:
+  - name: gocache
+    path: /go
   commands:
   - make lint
+
+trigger:
+  event:
+    - pull_request
+
+volumes:
+- name: gocache
+  temp: {}
+---
+kind: pipeline
+type: docker
+name: release
+
+steps:
+- name: fetch
+  image: alpine/git
+  commands:
+  - git fetch --tags
+
+- name: publish-image
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: gocache
+    path: /go
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    TAG: ${DRONE_TAG}
+  commands:
+    - |
+      apk update && apk add --no-cache curl make git go bash
+      curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | ash
+      /usr/local/bin/dockerd-entrypoint.sh &
+      while [ ! -S /var/run/docker.sock ]; do echo "waiting for docker..."; sleep 2; done
+      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      cd build/images/node && make build
+      docker push docker.io/criticalstack/cinder:${TAG}
 
 - name: release
   image: golang:1.14
   volumes:
   - name: gocache
     path: /go
-  when:
-    branch:
-    - main
-    event:
-    - tag
   environment:
     GITHUB_TOKEN:
       from_secret: github_token
@@ -37,6 +73,12 @@ steps:
   - curl -sL https://git.io/goreleaser | bash
   - curl -F "package[distro_version_id]=190" -F "package[package_file]=@$(ls dist/crit_*_x86_64.deb)" https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/criticalstack/public/packages.json
   - curl -F "package[distro_version_id]=204" -F "package[package_file]=@$(ls dist/crit_*_x86_64.rpm)" https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/criticalstack/public/packages.json
+
+trigger:
+  branch:
+    - main
+  event:
+    - tag
 
 volumes:
 - name: gocache
