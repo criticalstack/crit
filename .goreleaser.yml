@@ -34,10 +34,6 @@ builds:
   - GO111MODULE=on
   main: ./cmd/cinder
   binary: cinder
-  goarch:
-    - "386"
-    - amd64
-    - arm64
   gcflags:
     - all=-trimpath={{.Env.GOPATH}}
   asmflags:
@@ -54,6 +50,7 @@ archives:
     windows: Windows
     386: i386
     amd64: x86_64
+  allow_different_binary_count: true
 nfpms:
 - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   package_name: criticalstack
