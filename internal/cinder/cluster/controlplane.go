@@ -12,6 +12,7 @@ import (
 
 	"github.com/criticalstack/crit/internal/cinder/config"
 	"github.com/criticalstack/crit/internal/cinder/config/constants"
+	"github.com/criticalstack/crit/internal/cinder/feature"
 	critconfig "github.com/criticalstack/crit/internal/config"
 )
 
@@ -49,8 +50,10 @@ func CreateControlPlaneNode(ctx context.Context, cfg *ControlPlaneConfig) (*Node
 		node.Stdout = os.Stdout
 		node.Stderr = os.Stderr
 	}
-	if err := node.Command("bash", "/cinder/scripts/fix-cgroup-mounts.sh").Run(); err != nil {
-		return node, err
+	if feature.Gates.Enabled(feature.FixCgroupMounts) {
+		if err := node.Command("bash", "/cinder/scripts/fix-cgroup-mounts.sh").Run(); err != nil {
+			return node, err
+		}
 	}
 	if err := node.SystemdReady(ctx); err != nil {
 		return node, err
@@ -87,5 +90,7 @@ func SetControlPlaneConfigurationDefaults(cfg *critconfig.ControlPlaneConfigurat
 	cfg.NodeConfiguration.KubeletConfiguration.NodeStatusUpdateFrequency = metav1.Duration{Duration: 1 * time.Second}
 	cfg.NodeConfiguration.KubeletConfiguration.SyncFrequency = metav1.Duration{Duration: 1 * time.Second}
 	cfg.NodeConfiguration.KubeletConfiguration.SerializeImagePulls = pointer.BoolPtr(false)
-	cfg.NodeConfiguration.KubeletConfiguration.CgroupRoot = "/kubelet"
+	if feature.Gates.Enabled(feature.FixCgroupMounts) {
+		cfg.NodeConfiguration.KubeletConfiguration.CgroupRoot = "/kubelet"
+	}
 }
