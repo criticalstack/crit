@@ -12,6 +12,9 @@ curl -L https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_
 chmod +x /usr/bin/kubelet
 echo "KUBELET_EXTRA_ARGS=--fail-swap-on=false" >> /etc/default/kubelet
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+mkdir -p /cinder/manifests
+curl -L https://github.com/criticalstack/machine-api/releases/download/v${MACHINE_API_VERSION}/machine-api.yaml -o /cinder/manifests/machine-api.yaml
+curl -L https://github.com/criticalstack/machine-api-provider-docker/releases/download/v${MACHINE_API_PROVIDER_DOCKER_VERSION}/machine-api-provider-docker.yaml -o /cinder/manifests/machine-api-provider-docker.yaml
 curl -LO https://download.docker.com/linux/static/stable/x86_64/docker-19.03.1.tgz
 tar zxvf docker-19.03.1.tgz --strip 1 -C /usr/bin docker/docker
 rm docker-19.03.1.tgz
