@@ -30,8 +30,8 @@ KUBERNETES_VERSION    := 1.18.5
 CHARTS_DIR                          := $(PWD)/charts
 CILIUM_VERSION                      := 1.8.1
 LOCAL_PATH_PROVISIONER_VERSION      := 0.0.12
-MACHINE_API_VERSION                 := 0.1.2
-MACHINE_API_PROVIDER_DOCKER_VERSION := 0.1.2
+MACHINE_API_VERSION                 := 1.0.1
+MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.2
 
 charts/*.tgz:
 	mkdir -p $(CHARTS_DIR)
@@ -44,12 +44,8 @@ charts/*.tgz:
 	helm repo update
 	helm pull cilium/cilium --version $(CILIUM_VERSION) -d $(CHARTS_DIR)
 	helm pull criticalstack/local-path-provisioner --version $(LOCAL_PATH_PROVISIONER_VERSION) -d $(CHARTS_DIR)
-	helm pull criticalstack/machine-api --version $(MACHINE_API_VERSION) -d $(CHARTS_DIR)
-	helm pull criticalstack/machine-api-provider-docker --version $(MACHINE_API_PROVIDER_DOCKER_VERSION) -d $(CHARTS_DIR)
 	mv $(CHARTS_DIR)/cilium-$(CILIUM_VERSION).tgz $(CHARTS_DIR)/cilium.tgz
 	mv $(CHARTS_DIR)/local-path-provisioner-$(LOCAL_PATH_PROVISIONER_VERSION).tgz $(CHARTS_DIR)/local-path-provisioner.tgz
-	mv $(CHARTS_DIR)/machine-api-$(MACHINE_API_VERSION).tgz $(CHARTS_DIR)/machine-api.tgz
-	mv $(CHARTS_DIR)/machine-api-provider-docker-$(MACHINE_API_PROVIDER_DOCKER_VERSION).tgz $(CHARTS_DIR)/machine-api-provider-docker.tgz
 
 build/*.tar:
 	mkdir -p $(BUILD_DIR)
@@ -67,7 +63,11 @@ build: clean $(CRIT) $(CINDER) charts/*.tgz build/*.tar ## build cinder docker i
 	docker exec $(BUILD_CONTAINER_NAME) bash -c 'mkdir -p /cinder'
 	docker cp ./charts $(BUILD_CONTAINER_NAME):/cinder/charts
 	docker cp ./scripts $(BUILD_CONTAINER_NAME):/cinder/scripts
-	docker exec -e KUBERNETES_VERSION=$(KUBERNETES_VERSION) $(BUILD_CONTAINER_NAME) bash -c /cinder/scripts/build.sh
+	docker exec \
+		-e KUBERNETES_VERSION=$(KUBERNETES_VERSION) \
+		-e MACHINE_API_VERSION=$(MACHINE_API_VERSION) \
+		-e MACHINE_API_PROVIDER_DOCKER_VERSION=$(MACHINE_API_PROVIDER_DOCKER_VERSION) \
+		$(BUILD_CONTAINER_NAME) bash -c /cinder/scripts/build.sh
 	for f in $$(find files/ -type f)
 	do
 	    docker cp $$f $(BUILD_CONTAINER_NAME):$${f##*files/}

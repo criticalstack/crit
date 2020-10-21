@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	DefaultNodeImage  = "criticalstack/cinder:v1.0.3"
+	DefaultNodeImage  = "criticalstack/cinder:v1"
 	DefaultNetwork    = "cinder"
 	KubernetesVersion = "1.18.5"
 
-	DefaultMachineAPIVersion               = "0.1.2"
-	DefaultMachineAPIProviderDockerVersion = "0.1.2"
+	DefaultMachineAPIVersion               = "1.0.1"
+	DefaultMachineAPIProviderDockerVersion = "1.0.2"
 	DefaultKubeRBACProxyVersion            = "0.5.0"
 	DefaultCiliumVersion                   = "1.8.1"
 	DefaultCiliumStartupScriptVersion      = "af2a99046eca96c0138551393b21a5c044c7fe79"
@@ -33,8 +33,8 @@ func GetImages() map[string]string {
 		"coredns":                     fmt.Sprintf("%s:%s", constants.CoreDNSImage, constants.DefaultCoreDNSVersion),
 		"bootstrap-server":            fmt.Sprintf("%s:v%s", constants.CritBootstrapServerImage, constants.DefaultBootstrapServerVersion),
 		"healthcheck-proxy":           fmt.Sprintf("%s:v%s", constants.CritHealthCheckProxyImage, constants.DefaultHealthcheckProxyVersion),
-		"machine-api":                 fmt.Sprintf("cscr.io/criticalstack/machine-api:v%s", DefaultMachineAPIVersion),
-		"machine-api-provider-docker": fmt.Sprintf("cscr.io/criticalstack/machine-api-provider-docker:v%s", DefaultMachineAPIProviderDockerVersion),
+		"machine-api":                 fmt.Sprintf("docker.io/criticalstack/machine-api:v%s", DefaultMachineAPIVersion),
+		"machine-api-provider-docker": fmt.Sprintf("docker.io/criticalstack/machine-api-provider-docker:v%s", DefaultMachineAPIProviderDockerVersion),
 		"kube-rbac-proxy":             fmt.Sprintf("gcr.io/kubebuilder/kube-rbac-proxy:v%s", DefaultKubeRBACProxyVersion),
 		"cilium":                      fmt.Sprintf("docker.io/cilium/cilium:v%s", DefaultCiliumVersion),
 		"cilium-operator-generic":     fmt.Sprintf("docker.io/cilium/operator-generic:v%s", DefaultCiliumVersion),
