@@ -11,7 +11,7 @@ const (
 	DefaultNetwork    = "cinder"
 	KubernetesVersion = "1.18.5"
 
-	DefaultMachineAPIVersion               = "1.0.1"
+	DefaultMachineAPIVersion               = "1.0.2"
 	DefaultMachineAPIProviderDockerVersion = "1.0.2"
 	DefaultKubeRBACProxyVersion            = "0.5.0"
 	DefaultCiliumVersion                   = "1.8.1"

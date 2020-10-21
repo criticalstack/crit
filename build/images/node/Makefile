@@ -30,7 +30,7 @@ KUBERNETES_VERSION    := 1.18.5
 CHARTS_DIR                          := $(PWD)/charts
 CILIUM_VERSION                      := 1.8.1
 LOCAL_PATH_PROVISIONER_VERSION      := 0.0.12
-MACHINE_API_VERSION                 := 1.0.1
+MACHINE_API_VERSION                 := 1.0.2
 MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.2
 
 charts/*.tgz:
