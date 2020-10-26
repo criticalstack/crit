@@ -3,6 +3,7 @@ package cluster
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"text/template"
 
 	"k8s.io/client-go/tools/clientcmd"
@@ -21,9 +22,11 @@ KRUSTLET_PRIVATE_KEY_FILE=/var/lib/kubelet/pki/kubelet.key
 KRUSTLET_DATA_DIR=/var/lib/krustlet
 KRUSTLET_NODE_IP={{ .IPv4 }}
 KRUSTLET_PORT={{ .Port }}
-KRUSTLET_NODE_NAME={{ .Name }}`
+KRUSTLET_NODE_NAME={{ .Name }}
+KRUSTLET_INSECURE_REGISTRIES={{ .InsecureRegistries }}
+KRUSTLET_ALLOW_LOCAL_MODULES=true`
 
-func BootstrapKrustlet(cluster, name string, port int, node *Node) error {
+func BootstrapKrustlet(cluster, name string, port int, node *Node, registries map[string]string) error {
 	id, secret := pki.GenerateBootstrapToken()
 	token := fmt.Sprintf("%s.%s", id, secret)
 	if err := node.Command("crit", "create", "token", token).Run(); err != nil {
@@ -50,16 +53,18 @@ func BootstrapKrustlet(cluster, name string, port int, node *Node) error {
 	if err := node.WriteFile(conf, data, 0644); err != nil {
 		return err
 	}
+
 	t, err := template.New("").Parse(krustletConfTmpl)
 	if err != nil {
 		return err
 	}
 	var b bytes.Buffer
 	if err := t.Execute(&b, map[string]string{
-		"IPv4":            node.IP(),
-		"Name":            fmt.Sprintf("%s-%s", cluster, name),
-		"Port":            fmt.Sprintf("%d", port),
-		"BootstrapConfig": conf,
+		"IPv4":               node.IP(),
+		"Name":               fmt.Sprintf("%s-%s", cluster, name),
+		"Port":               fmt.Sprintf("%d", port),
+		"BootstrapConfig":    conf,
+		"InsecureRegistries": parseInsecureRegistries(registries),
 	}); err != nil {
 		return err
 	}
@@ -70,4 +75,14 @@ func BootstrapKrustlet(cluster, name string, port int, node *Node) error {
 		return err
 	}
 	return nil
+}
+
+func parseInsecureRegistries(registries map[string]string) string {
+	insecureRegistries := make([]string, 0)
+	for ref, registry := range registries {
+		if strings.HasPrefix(registry, "http://") {
+			insecureRegistries = append(insecureRegistries, ref)
+		}
+	}
+	return strings.Join(insecureRegistries, ",")
 }

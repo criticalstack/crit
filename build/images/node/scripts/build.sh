@@ -18,9 +18,9 @@ curl -L https://github.com/criticalstack/machine-api-provider-docker/releases/do
 curl -LO https://download.docker.com/linux/static/stable/x86_64/docker-19.03.1.tgz
 tar zxvf docker-19.03.1.tgz --strip 1 -C /usr/bin docker/docker
 rm docker-19.03.1.tgz
-curl -LO https://krustlet.blob.core.windows.net/releases/krustlet-v0.3.0-linux-amd64.tar.gz
-tar zxvf krustlet-v0.3.0-linux-amd64.tar.gz -C /usr/bin
-rm krustlet-v0.3.0-linux-amd64.tar.gz
+curl -LO https://krustlet.blob.core.windows.net/releases/krustlet-v0.5.0-linux-amd64.tar.gz
+tar zxvf krustlet-v0.5.0-linux-amd64.tar.gz -C /usr/bin
+rm krustlet-v0.5.0-linux-amd64.tar.gz
 mkdir -p /var/lib/krustlet
 mkdir -p /etc/kubernetes/pki
 mkdir -p /kind

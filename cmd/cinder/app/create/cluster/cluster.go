@@ -206,10 +206,10 @@ func NewCommand() *cobra.Command {
 
 			if feature.Gates.Enabled(feature.Krustlet) {
 				if err := utils.NewStep("Installing Krustlet", ":fire:", opts.Verbose, func() (err error) {
-					if err := cluster.BootstrapKrustlet(opts.Name, "wasi", 3000, node); err != nil {
+					if err := cluster.BootstrapKrustlet(opts.Name, "wasi", 3000, node, cfg.RegistryMirrors); err != nil {
 						return err
 					}
-					if err := cluster.BootstrapKrustlet(opts.Name, "wascc", 3001, node); err != nil {
+					if err := cluster.BootstrapKrustlet(opts.Name, "wascc", 3001, node, cfg.RegistryMirrors); err != nil {
 						return err
 					}
 					return nil
