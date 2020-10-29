@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	DefaultNodeImage  = "criticalstack/cinder:v1"
+	DefaultNodeImage  = "criticalstack/cinder:v1.0.6"
 	DefaultNetwork    = "cinder"
 	KubernetesVersion = "1.18.10"
 
