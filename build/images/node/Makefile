@@ -1,8 +1,5 @@
 .DEFAULT_GOAL:=help
 
-SHELL:=/bin/bash
-.ONESHELL:
-
 ##@ Building
 
 BIN_DIR := bin
@@ -24,14 +21,14 @@ IMAGE ?= docker.io/criticalstack/cinder:$(TAG)
 BUILD_DIR             := $(PWD)/build
 BUILD_CONTAINER_NAME  := cinder-build
 BASE_IMAGE            := docker.io/kindest/base:v20200709-8b878ace
-KUBERNETES_VERSION    := 1.18.5
+KUBERNETES_VERSION    := 1.18.10
 
 # charts
 CHARTS_DIR                          := $(PWD)/charts
-CILIUM_VERSION                      := 1.8.1
+CILIUM_VERSION                      := 1.8.5
 LOCAL_PATH_PROVISIONER_VERSION      := 0.0.12
-MACHINE_API_VERSION                 := 1.0.2
-MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.2
+MACHINE_API_VERSION                 := 1.0.6
+MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.7
 
 charts/*.tgz:
 	mkdir -p $(CHARTS_DIR)
@@ -49,11 +46,11 @@ charts/*.tgz:
 
 build/*.tar:
 	mkdir -p $(BUILD_DIR)
-	for image in $$($(CINDER) get images)
-	do
-	    docker pull $$image
-	    filename=$$(echo $$image | sed -e 's/[^A-Za-z0-9._-]/_/g').tar
-	    docker save -o build/$$filename $$image
+	for image in $$($(CINDER) get images); \
+	do \
+	    docker pull $$image && \
+	    filename=$$(echo $$image | sed -e 's/[^A-Za-z0-9._-]/_/g').tar && \
+	    docker save -o build/$$filename $$image; \
 	done
 
 .PHONY: build
@@ -68,17 +65,17 @@ build: clean $(CRIT) $(CINDER) charts/*.tgz build/*.tar ## build cinder docker i
 		-e MACHINE_API_VERSION=$(MACHINE_API_VERSION) \
 		-e MACHINE_API_PROVIDER_DOCKER_VERSION=$(MACHINE_API_PROVIDER_DOCKER_VERSION) \
 		$(BUILD_CONTAINER_NAME) bash -c /cinder/scripts/build.sh
-	for f in $$(find files/ -type f)
-	do
-	    docker cp $$f $(BUILD_CONTAINER_NAME):$${f##*files/}
+	for f in $$(find files/ -type f); \
+	do \
+	    docker cp $$f $(BUILD_CONTAINER_NAME):"$${f##*files/}"; \
 	done
 	docker cp ./bin/crit $(BUILD_CONTAINER_NAME):/usr/bin/
 	docker cp ./bin/cinder $(BUILD_CONTAINER_NAME):/usr/bin/
 	docker cp ../../../templates/audit-policy.yaml $(BUILD_CONTAINER_NAME):/etc/kubernetes/audit-policy.yaml
 	docker exec $(BUILD_CONTAINER_NAME) bash -c 'nohup containerd > /dev/null 2>&1 &'
-	for f in $$(find build/ -name '*.tar')
-	do
-	    docker exec $(BUILD_CONTAINER_NAME) ctr --namespace=k8s.io images import --all-platforms --no-unpack /build/$${f##*build/}
+	for f in $$(find build/ -name '*.tar'); \
+	do \
+	    docker exec $(BUILD_CONTAINER_NAME) ctr --namespace=k8s.io images import --all-platforms --no-unpack "/build/$${f##*build/}"; \
 	done
 	docker exec $(BUILD_CONTAINER_NAME) pkill containerd
 	docker commit --change 'ENTRYPOINT [ "/usr/local/bin/entrypoint", "/sbin/init" ]' $(BUILD_CONTAINER_NAME) $(IMAGE)
