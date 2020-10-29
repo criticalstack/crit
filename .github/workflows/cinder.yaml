@@ -26,7 +26,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=${GITHUB_REPOSITORY}
+          DOCKER_IMAGE=criticalstack/cinder
           VERSION=noop
           if [ "${{ github.event_name }}" = "schedule" ]; then
             VERSION=nightly
