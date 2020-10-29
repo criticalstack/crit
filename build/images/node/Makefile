@@ -32,11 +32,7 @@ MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.7
 
 charts/*.tgz:
 	mkdir -p $(CHARTS_DIR)
-	helm repo add stable https://kubernetes-charts.storage.googleapis.com
-	helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
 	helm repo add criticalstack https://charts.cscr.io/criticalstack
-	helm repo add traefik https://containous.github.io/traefik-helm-chart
-	helm repo add jetstack https://charts.jetstack.io
 	helm repo add cilium https://helm.cilium.io/
 	helm repo update
 	helm pull cilium/cilium --version $(CILIUM_VERSION) -d $(CHARTS_DIR)
