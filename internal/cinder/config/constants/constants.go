@@ -9,12 +9,12 @@ import (
 const (
 	DefaultNodeImage  = "criticalstack/cinder:v1"
 	DefaultNetwork    = "cinder"
-	KubernetesVersion = "1.18.5"
+	KubernetesVersion = "1.18.10"
 
-	DefaultMachineAPIVersion               = "1.0.2"
-	DefaultMachineAPIProviderDockerVersion = "1.0.2"
+	DefaultMachineAPIVersion               = "1.0.6"
+	DefaultMachineAPIProviderDockerVersion = "1.0.7"
 	DefaultKubeRBACProxyVersion            = "0.5.0"
-	DefaultCiliumVersion                   = "1.8.1"
+	DefaultCiliumVersion                   = "1.8.5"
 	DefaultCiliumStartupScriptVersion      = "af2a99046eca96c0138551393b21a5c044c7fe79"
 	DefaultLocalPathProvisionerVersion     = "0.0.12"
 	DefaultRegistryVersion                 = "2.7.1"
