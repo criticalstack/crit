@@ -66,6 +66,7 @@ More information about this Kubernetes standard can be found [here](https://gith
 
 
 ```yaml
+# config.yaml
 apiVersion: cinder.crit.sh/v1alpha1
 kind: ClusterConfiguration
 featureGates:
@@ -83,12 +84,25 @@ controlPlaneConfiguration:
                 values: ["wasm32-wasi", "wasm32-wascc"]
 ```
 
+to create a new Cinder cluster:
+
+```sh
+❯ cinder create cluster -c config.yaml
+Creating cluster "cinder" ...
+ 🔥  Generating certificates
+ 🔥  Creating control-plane node
+ 🔥  Installing CNI
+ 🔥  Installing StorageClass
+ 🔥  Running post-up commands
+Set kubectl context to "kubernetes-admin@cinder". Prithee, be careful.
+```
+
 *Note that node affinity is being set for `kube-proxy` to ensure it does not try to schedule a pod on either the WASI or WASCC nodes*
 
 This will start two instances of Krustlet for both [WASI](https://wasi.dev/) and [waSCC](https://wascc.dev/) runtimes:
 
 ```sh
-$ kubectl get no
+❯ kubectl get no
 
 NAME           STATUS   ROLES    AGE   VERSION
 cinder         Ready    master   2m    v1.18.5
@@ -99,8 +113,8 @@ cinder-wasi    Ready    <none>   1m    0.5.0
 With these nodes ready, we can build and push images to our local registry and run them on our Cinder cluster. For example, the [Hello World Rust for WASI](https://github.com/deislabs/krustlet/tree/master/demos/wasi/hello-world-rust) can be built using cargo and pushed to our local registry using [wasm-to-oci](https://github.com/engineerd/wasm-to-oci):
 
 ```sh
-cargo build --target wasm32-wasi --release
-wasm-to-oci push --use-http \
+❯ cargo build --target wasm32-wasi --release
+❯ wasm-to-oci push --use-http \
     target/wasm32-wasi/release/hello-world-rust.wasm \
     localhost:5000/hello-world-rust:v0.2.0
 ```
@@ -120,13 +134,13 @@ spec:
 Finally, the manifest can be applied:
 
 ```sh
-kubectl apply -f k8s.yaml
+❯ kubectl apply -f k8s.yaml
 ```
 
 Which will result in the pod being scheduled on the waSCC Krustlet:
 
 ```
-$ kubectl get po -A
+❯ kubectl get po -A
 
 NAMESPACE            NAME                                  READY   STATUS                          RESTARTS   AGE
 kube-system          cilium-operator-657978fb5b-frrxj      1/1     Running                         0          8m4s
@@ -143,7 +157,7 @@ local-path-storage   local-path-storage-74cd8967f5-vv2mb   1/1     Running      
 And should produce the following log output:
 
 ```sh
-$ kubectl logs hello-world-wasi-rust
+❯ kubectl logs hello-world-wasi-rust
 
 hello from stdout!
 hello from stderr!
