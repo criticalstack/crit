@@ -49,10 +49,10 @@ func validateNodeConfiguration(cfg *config.NodeConfiguration) (errs []error) {
 	if err != nil {
 		errs = append(errs, errors.Errorf("invalid KubernetesVersion: %#v", cfg.KubernetesVersion))
 	}
-	if v.Minor() < MinKubeVersion.Minor() {
+	if v != nil && v.Minor() < MinKubeVersion.Minor() {
 		errs = append(errs, errors.Errorf("invalid KubernetesVersion: %#v", cfg.KubernetesVersion))
 	}
-	if v.Minor() > MaxKubeVersion.Minor() {
+	if v != nil && v.Minor() > MaxKubeVersion.Minor() {
 		log.Warn("The KubernetesVersion is newer than expected. Older versions of crit will be capable of bootstrapping newer versions of Kubernetes, but may produce undesired behavior", zap.String("KubernetesVersion", cfg.KubernetesVersion))
 	}
 	return
