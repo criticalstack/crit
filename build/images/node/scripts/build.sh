@@ -10,7 +10,11 @@ apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
 DEBIAN_FRONTEND=noninteractive && clean-install kubectl=${KUBERNETES_VERSION}-00
 curl -L https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/kubelet -o /usr/bin/kubelet
 chmod +x /usr/bin/kubelet
-echo "KUBELET_EXTRA_ARGS=--fail-swap-on=false" >> /etc/default/kubelet
+
+# Kind has moved the kubelet systemd files into the base image, so this is no
+# longer necessary
+#echo "KUBELET_EXTRA_ARGS=--fail-swap-on=false" >> /etc/default/kubelet
+
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 mkdir -p /cinder/manifests
 curl -L https://github.com/criticalstack/machine-api/releases/download/v${MACHINE_API_VERSION}/machine-api.yaml -o /cinder/manifests/machine-api.yaml
@@ -29,3 +33,5 @@ mkdir -p /etc/cni/net.d
 mkdir -p /var/lib/crit
 mkdir -p /var/log/kubernetes
 chmod 700 /var/lib/etcd
+
+echo ${KUBERNETES_VERSION} > /cinder/kubernetes_version

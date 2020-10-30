@@ -16,7 +16,6 @@ import (
 	"github.com/criticalstack/crit/internal/cinder/utils"
 	critconfig "github.com/criticalstack/crit/internal/config"
 	"github.com/criticalstack/crit/pkg/kubernetes/pki"
-	yamlutil "github.com/criticalstack/crit/pkg/kubernetes/yaml"
 )
 
 var opts struct {
@@ -82,18 +81,6 @@ func NewCommand() *cobra.Command {
 					Encoding:    config.Base64,
 					Content:     base64.StdEncoding.EncodeToString(data),
 				})
-				data, err = yamlutil.MarshalToYaml(cfg.WorkerConfiguration, critconfig.SchemeGroupVersion)
-				if err != nil {
-					return err
-				}
-				cfg.Files = append(cfg.Files, config.File{
-					Path:        "/var/lib/crit/config.yaml",
-					Owner:       "root:root",
-					Permissions: "0644",
-					Encoding:    config.Base64,
-					Content:     base64.StdEncoding.EncodeToString(data),
-				})
-
 				if feature.Gates.Enabled(feature.LocalRegistry) {
 					cfg.RegistryMirrors[fmt.Sprintf("%s:%d", cfg.LocalRegistryName, cfg.LocalRegistryPort)] = fmt.Sprintf("http://%s:%d", cfg.LocalRegistryName, cfg.LocalRegistryPort)
 				}

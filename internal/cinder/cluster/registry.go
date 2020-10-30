@@ -22,7 +22,7 @@ func CreateRegistry(name string, port int) error {
 		"--name", name,
 		"-p", fmt.Sprintf("%d:5000", port),
 		"--network", constants.DefaultNetwork,
-		fmt.Sprintf("docker.io/library/registry:%s", constants.DefaultRegistryVersion),
+		fmt.Sprintf("docker.io/library/registry:%s", constants.RegistryVersion),
 	}
 	providerName := "docker"
 	if v, ok := os.LookupEnv("KIND_EXPERIMENTAL_PROVIDER"); ok {

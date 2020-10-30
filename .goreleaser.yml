@@ -43,6 +43,7 @@ builds:
      - -X "github.com/criticalstack/crit/internal/buildinfo.Date={{.Date}}"
      - -X "github.com/criticalstack/crit/internal/buildinfo.GitSHA={{.ShortCommit}}"
      - -X "github.com/criticalstack/crit/internal/buildinfo.Version={{.Tag}}"
+     - -X "github.com/criticalstack/crit/internal/cinder/config/constants.DefaultNodeImage=criticalstack/cinder:{{.Tag}}"
 archives:
 - replacements:
     darwin: Darwin

@@ -15,20 +15,26 @@ $(CINDER): # Build cinder
 	$(MAKE) -s -C ../../../ cinder BIN_DIR=$(PWD)/$(BIN_DIR)
 
 
+# Versions are all pulled from this file, any version updates should by made in this file
+CONST_FILE := ../../../internal/cinder/config/constants/constants.go
+define readvar
+$(or $(shell sed -nE 's/^.*$(1).*"(.*)"$$/\1/p' $(CONST_FILE)),$(error "Cannot find variable $(1)"))
+endef
+
 TAG   ?= latest
 IMAGE ?= docker.io/criticalstack/cinder:$(TAG)
 
 BUILD_DIR             := $(PWD)/build
 BUILD_CONTAINER_NAME  := cinder-build
-BASE_IMAGE            := docker.io/kindest/base:v20200709-8b878ace
-KUBERNETES_VERSION    := 1.18.10
+BASE_IMAGE            :=  $(call readvar,KindBaseImage)
+KUBERNETES_VERSION    := $(call readvar,KubernetesVersion)
 
 # charts
 CHARTS_DIR                          := $(PWD)/charts
-CILIUM_VERSION                      := 1.8.5
-LOCAL_PATH_PROVISIONER_VERSION      := 0.0.12
-MACHINE_API_VERSION                 := 1.0.6
-MACHINE_API_PROVIDER_DOCKER_VERSION := 1.0.7
+CILIUM_VERSION                      := $(call readvar,CiliumVersion)
+LOCAL_PATH_PROVISIONER_VERSION      := $(call readvar,LocalPathProvisionerVersion)
+MACHINE_API_VERSION                 := $(call readvar,MachineAPIVersion)
+MACHINE_API_PROVIDER_DOCKER_VERSION := $(call readvar,MachineAPIProviderDockerVersion)
 
 charts/*.tgz:
 	mkdir -p $(CHARTS_DIR)

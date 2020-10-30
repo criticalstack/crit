@@ -17,8 +17,6 @@ import (
 	"github.com/criticalstack/crit/internal/cinder/config/constants"
 	"github.com/criticalstack/crit/internal/cinder/feature"
 	"github.com/criticalstack/crit/internal/cinder/utils"
-	critconfig "github.com/criticalstack/crit/internal/config"
-	yamlutil "github.com/criticalstack/crit/pkg/kubernetes/yaml"
 )
 
 var opts struct {
@@ -121,23 +119,7 @@ func NewCommand() *cobra.Command {
 				if err := feature.MutableGates.SetFromMap(cfg.FeatureGates); err != nil {
 					return err
 				}
-				if cfg.ControlPlaneConfiguration == nil {
-					cfg.ControlPlaneConfiguration = &critconfig.ControlPlaneConfiguration{}
-				}
-				cfg.ControlPlaneConfiguration.ClusterName = opts.Name
-				cluster.SetControlPlaneConfigurationDefaults(cfg.ControlPlaneConfiguration)
 				cfg.Files = append(cfg.Files, files...)
-				data, err := yamlutil.MarshalToYaml(cfg.ControlPlaneConfiguration, critconfig.SchemeGroupVersion)
-				if err != nil {
-					return err
-				}
-				cfg.Files = append(cfg.Files, config.File{
-					Path:        "/var/lib/crit/config.yaml",
-					Owner:       "root:root",
-					Permissions: "0644",
-					Encoding:    config.Base64,
-					Content:     base64.StdEncoding.EncodeToString(data),
-				})
 				if feature.Gates.Enabled(feature.LocalRegistry) {
 					cfg.RegistryMirrors[fmt.Sprintf("%s:%d", cfg.LocalRegistryName, cfg.LocalRegistryPort)] = fmt.Sprintf("http://%s:%d", cfg.LocalRegistryName, cfg.LocalRegistryPort)
 				}

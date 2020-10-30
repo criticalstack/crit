@@ -2,7 +2,9 @@ package cluster
 
 import (
 	"context"
+	"encoding/base64"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -14,6 +16,7 @@ import (
 	"github.com/criticalstack/crit/internal/cinder/config"
 	"github.com/criticalstack/crit/internal/cinder/config/constants"
 	critconfig "github.com/criticalstack/crit/internal/config"
+	yamlutil "github.com/criticalstack/crit/pkg/kubernetes/yaml"
 )
 
 type WorkerConfig struct {
@@ -40,6 +43,22 @@ func CreateWorkerNode(ctx context.Context, cfg *WorkerConfig) (*Node, error) {
 		node.Stdout = os.Stdout
 		node.Stderr = os.Stderr
 	}
+	data, err := node.ReadFile("/cinder/kubernetes_version")
+	if err != nil {
+		return nil, err
+	}
+	cfg.ClusterConfiguration.WorkerConfiguration.NodeConfiguration.KubernetesVersion = strings.TrimSpace(string(data))
+	data, err = yamlutil.MarshalToYaml(cfg.ClusterConfiguration.WorkerConfiguration, critconfig.SchemeGroupVersion)
+	if err != nil {
+		return nil, err
+	}
+	cfg.ClusterConfiguration.Files = append(cfg.ClusterConfiguration.Files, config.File{
+		Path:        "/var/lib/crit/config.yaml",
+		Owner:       "root:root",
+		Permissions: "0644",
+		Encoding:    config.Base64,
+		Content:     base64.StdEncoding.EncodeToString(data),
+	})
 	if err := node.Command("bash", "/cinder/scripts/fix-cgroup-mounts.sh").Run(); err != nil {
 		return nil, err
 	}
