@@ -1,3 +1,5 @@
+operator:
+  numReplicas: 1
 global:
   kubeProxyReplacement: disabled
   autoDirectNodeRoutes: true

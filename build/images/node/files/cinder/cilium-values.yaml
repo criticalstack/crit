@@ -1,3 +1,5 @@
+operator:
+  numReplicas: 1
 global:
   kubeProxyReplacement: partial
   hostServices:
@@ -13,10 +15,10 @@ global:
     #enabled: true
   containerRuntime:
     integration: containerd
-  hubble:
-    enabled: true
-    metrics:
-      enabled: {dns,drop,tcp,flow,port-distribution,icmp,http}
+  #hubble:
+    #enabled: true
+    #metrics:
+      #enabled: {dns,drop,tcp,flow,port-distribution,icmp,http}
     #listenAddress: ":4244"
     #relay:
       #enabled: true
