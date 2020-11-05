@@ -13,7 +13,7 @@ const (
 	DefaultBootstrapServerVersion  = "0.3.0"
 	DefaultCoreDNSVersion          = "1.6.9"
 	DefaultHealthcheckProxyVersion = "0.1.0"
-	DefaultPauseImageVersion       = "3.2"
+	DefaultPauseImageVersion       = "3.3"
 
 	KubeAPIServerImage         = "k8s.gcr.io/kube-apiserver"
 	KubeControllerManagerImage = "k8s.gcr.io/kube-controller-manager"
