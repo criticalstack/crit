@@ -26,8 +26,8 @@ const (
 	CiliumVersion                   = "1.8.5"
 	KubeRBACProxyVersion            = "0.5.0"
 	LocalPathProvisionerVersion     = "0.0.12"
-	MachineAPIProviderDockerVersion = "1.0.7"
-	MachineAPIVersion               = "1.0.6"
+	MachineAPIProviderDockerVersion = "1.0.8"
+	MachineAPIVersion               = "1.0.7"
 	RegistryVersion                 = "2.7.1"
 )
 
