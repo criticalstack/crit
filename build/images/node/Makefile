@@ -26,7 +26,7 @@ IMAGE ?= docker.io/criticalstack/cinder:$(TAG)
 
 BUILD_DIR             := $(PWD)/build
 BUILD_CONTAINER_NAME  := cinder-build
-BASE_IMAGE            :=  $(call readvar,KindBaseImage)
+BASE_IMAGE            := $(call readvar,KindBaseImage)
 KUBERNETES_VERSION    := $(call readvar,KubernetesVersion)
 
 # charts
