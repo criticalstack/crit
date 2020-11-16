@@ -16,18 +16,29 @@
 
 USER="criticalstack"
 REPO="crit"
-VERSION=$(curl -s "https://api.github.com/repos/${USER}/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
 OS=$(uname)
 ARCH=$(uname -m)
-FILENAME="${REPO}_${VERSION}_${OS}_${ARCH}.tar.gz"
 TMP_DIR="${REPO}_tmp"
-INSTALL_DIR=/usr/local/bin
+DEFAULT_INSTALL_DIR=/usr/local/bin
+INSTALL_DIR=${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}
+DEFAULT_VERSION=latest
+VERSION=${VERSION:-$DEFAULT_VERSION}
+
+# By default, list latest release
+if [ "$VERSION" = latest ]; then
+    VERSION=$(curl -s "https://api.github.com/repos/${USER}/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    if [ $? -ne 0 ]; then
+        echo "Failed to determine latest release version of ${USER}/${REPO}"
+        exit 1
+    fi
+fi
+FILENAME="${REPO}_${VERSION}_${OS}_${ARCH}.tar.gz"
 
 # Download archive from GitHub Releases
-curl -sLO -w '' "https://github.com/${USER}/${REPO}/releases/download/v${VERSION}/${FILENAME}"
+curl -sLO -w '' -f "https://github.com/${USER}/${REPO}/releases/download/v${VERSION}/${FILENAME}"
 
 if [ $? -ne 0 ]; then
-    echo "Failed to download ${USER}/${REPO}"
+    echo "Failed to download ${USER}/${REPO} at version \"${VERSION}\""
     exit 1
 fi
 
@@ -40,10 +51,20 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Prompt for sudo if directory is not writable
+MV_CMD=mv
+if [ ! -w ${INSTALL_DIR} ]; then
+    MV_CMD="sudo mv"
+fi
+
 # Install any executables
 for f in ${TMP_DIR}/*; do
     if [ -x $f ]; then
-        sudo mv $f $INSTALL_DIR
+        $MV_CMD $f $INSTALL_DIR
+        if [ $? -ne 0 ]; then
+            echo "Failed to install ${INSTALL_DIR}/${f}"
+            exit 1
+        fi
     fi
 done
 

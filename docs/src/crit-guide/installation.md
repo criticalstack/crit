@@ -8,6 +8,12 @@ Run the following in your terminal to download the latest version of crit:
 curl -sSfL https://get.crit.sh | sh
 ```
 
+By default, the latest release version is installed.  Set environment variables to install a different version, or to install to a different destination:
+
+```sh
+curl -sSfL https://get.crit.sh | VERSION=1.0.8 INSTALL_DIR=$HOME/bin sh
+```
+
 ### Install From Packagecloud.io
 
 Debian/Ubuntu:
