@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=dash
 
 # Copyright 2020 Critical Stack, LLC
 # 
@@ -27,7 +28,7 @@ VERSION=${VERSION:-$DEFAULT_VERSION}
 # By default, list latest release
 if [ "$VERSION" = latest ]; then
     VERSION=$(curl -s "https://api.github.com/repos/${USER}/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-    if [ $? -ne 0 ]; then
+    if [ -z "$VERSION" ]; then
         echo "Failed to determine latest release version of ${USER}/${REPO}"
         exit 1
     fi
@@ -35,33 +36,28 @@ fi
 FILENAME="${REPO}_${VERSION}_${OS}_${ARCH}.tar.gz"
 
 # Download archive from GitHub Releases
-curl -sLO -w '' -f "https://github.com/${USER}/${REPO}/releases/download/v${VERSION}/${FILENAME}"
-
-if [ $? -ne 0 ]; then
+if ! curl -sLO -w '' -f "https://github.com/${USER}/${REPO}/releases/download/v${VERSION}/${FILENAME}"; then
     echo "Failed to download ${USER}/${REPO} at version \"${VERSION}\""
     exit 1
 fi
 
 # Unpack into tmp directory
 mkdir -p ${TMP_DIR}
-tar xzf ${FILENAME} -C ${TMP_DIR}
-
-if [ $? -ne 0 ]; then
+if ! tar xzf "${FILENAME}" -C "${TMP_DIR}"; then
     echo "Failed to unpack ${FILENAME}"
     exit 1
 fi
 
 # Prompt for sudo if directory is not writable
-MV_CMD=mv
-if [ ! -w ${INSTALL_DIR} ]; then
+MV_CMD="mv"
+if [ ! -w "${INSTALL_DIR}" ]; then
     MV_CMD="sudo mv"
 fi
 
 # Install any executables
-for f in ${TMP_DIR}/*; do
-    if [ -x $f ]; then
-        $MV_CMD $f $INSTALL_DIR
-        if [ $? -ne 0 ]; then
+for f in "${TMP_DIR}"/*; do
+    if [ -x "$f" ]; then
+        if ! $MV_CMD "$f" "$INSTALL_DIR"; then
             echo "Failed to install ${INSTALL_DIR}/${f}"
             exit 1
         fi
