@@ -36,7 +36,7 @@ cinder: ## Build the cinder binary
 	@$(GO_BUILD_ENV_VARS) go build -o $(BIN_DIR)/cinder $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/cinder
 
 crit: ## Build the crit binary
-	@$(GO_BUILD_ENV_VARS) go build -o $(BIN_DIR)/crit $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/crit
+	@$(GO_BUILD_ENV_VARS) GOOS=linux GOARCH=amd64 go build -o $(BIN_DIR)/crit $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/crit
 
 .PHONY: update-codegen update-charts update-docs update-embedded
 update-codegen: ## Update generated code (slow)
