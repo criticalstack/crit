@@ -192,18 +192,21 @@ type KubeAPIServerConfiguration struct {
 	ExtraSANs                []string                 `json:"extraSans,omitempty"`
 	HealthcheckProxyVersion  string                   `json:"healthcheckProxyVersion,omitempty"`
 	HealthcheckProxyBindPort int                      `json:"healthcheckProxyBindPort,omitempty"`
+	ExtraLabels              map[string]string        `json:"extraLabels,omitempty"`
 }
 
 type KubeControllerManagerConfiguration struct {
 	ExtraArgs    map[string]string        `json:"extraArgs,omitempty"`
 	ExtraVolumes []computil.HostPathMount `json:"extraVolumes,omitempty"`
 	FeatureGates map[string]bool          `json:"featureGates,omitempty"`
+	ExtraLabels  map[string]string        `json:"extraLabels,omitempty"`
 }
 
 type KubeSchedulerConfiguration struct {
 	ExtraArgs    map[string]string        `json:"extraArgs,omitempty"`
 	ExtraVolumes []computil.HostPathMount `json:"extraVolumes,omitempty"`
 	FeatureGates map[string]bool          `json:"featureGates,omitempty"`
+	ExtraLabels  map[string]string        `json:"extraLabels,omitempty"`
 }
 
 type KubeProxyConfiguration struct {

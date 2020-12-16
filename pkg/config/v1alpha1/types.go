@@ -143,18 +143,21 @@ type KubeAPIServerConfiguration struct {
 	ExtraVolumes []HostPathMount   `json:"extraVolumes,omitempty"`
 	FeatureGates map[string]bool   `json:"featureGates,omitempty"`
 	ExtraSANs    []string          `json:"extraSans,omitempty"`
+	ExtraLabels  map[string]string `json:"extraLabels,omitempty"`
 }
 
 type KubeControllerManagerConfiguration struct {
 	ExtraArgs    map[string]string `json:"extraArgs,omitempty"`
 	ExtraVolumes []HostPathMount   `json:"extraVolumes,omitempty"`
 	FeatureGates map[string]bool   `json:"featureGates,omitempty"`
+	ExtraLabels  map[string]string `json:"extraLabels,omitempty"`
 }
 
 type KubeSchedulerConfiguration struct {
 	ExtraArgs    map[string]string `json:"extraArgs,omitempty"`
 	ExtraVolumes []HostPathMount   `json:"extraVolumes,omitempty"`
 	FeatureGates map[string]bool   `json:"featureGates,omitempty"`
+	ExtraLabels  map[string]string `json:"extraLabels,omitempty"`
 }
 
 // APIEndpoint represents a reachable Kubernetes API endpoint.

@@ -83,3 +83,10 @@ func getCACertsExtraVolumes() []corev1.Volume {
 	}
 	return volumes
 }
+
+func appendExtraLabels(p *corev1.Pod, labels map[string]string) (err error) {
+	for k, v := range labels {
+		p.ObjectMeta.Labels[k] = v
+	}
+	return nil
+}

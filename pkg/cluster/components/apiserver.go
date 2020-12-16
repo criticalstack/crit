@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -212,5 +213,10 @@ func NewAPIServerStaticPod(cfg *config.ControlPlaneConfiguration) (*corev1.Pod, 
 	if err := appendExtraVolumes(p, cfg.KubeAPIServerConfiguration.ExtraVolumes); err != nil {
 		return nil, err
 	}
+
+	if err := appendExtraLabels(p, cfg.KubeAPIServerConfiguration.ExtraLabels); err != nil {
+		log.Info("apiserver extra labels", zap.Error(err))
+	}
+
 	return p, nil
 }
