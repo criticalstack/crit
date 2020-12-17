@@ -40,6 +40,12 @@ func appendExtraVolumes(p *corev1.Pod, volumes []computil.HostPathMount) (err er
 	return nil
 }
 
+func appendExtraLabels(p *corev1.Pod, labels map[string]string) {
+	for k, v := range labels {
+		p.ObjectMeta.Labels[k] = v
+	}
+}
+
 // caCertsExtraVolumePaths specifies the paths that can be conditionally mounted into the apiserver and controller-manager containers
 // as /etc/ssl/certs might be or contain a symlink to them. It's a variable since it may be changed in unit testing. This var MUST
 // NOT be changed in normal codepaths during runtime.
@@ -82,11 +88,4 @@ func getCACertsExtraVolumes() []corev1.Volume {
 		})
 	}
 	return volumes
-}
-
-func appendExtraLabels(p *corev1.Pod, labels map[string]string) (err error) {
-	for k, v := range labels {
-		p.ObjectMeta.Labels[k] = v
-	}
-	return nil
 }

@@ -205,9 +205,7 @@ func NewControllerManagerStaticPod(cfg *config.ControlPlaneConfiguration) *corev
 		log.Debug("controller manager extra volumes", zap.Error(err))
 	}
 
-	if err := appendExtraLabels(p, cfg.KubeControllerManagerConfiguration.ExtraLabels); err != nil {
-		log.Info("controller manager extra labels", zap.Error(err))
-	}
+	appendExtraLabels(p, cfg.KubeControllerManagerConfiguration.ExtraLabels)
 
 	return p
 }
