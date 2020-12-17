@@ -107,8 +107,7 @@ func NewSchedulerStaticPod(cfg *config.ControlPlaneConfiguration) *corev1.Pod {
 		log.Debug("scheduler extra volumes", zap.Error(err))
 	}
 
-	if err := appendExtraLabels(p, cfg.KubeSchedulerConfiguration.ExtraLabels); err != nil {
-		log.Info("scheduler extra labels", zap.Error(err))
-	}
+	appendExtraLabels(p, cfg.KubeSchedulerConfiguration.ExtraLabels)
+
 	return p
 }
