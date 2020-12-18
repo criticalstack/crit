@@ -110,6 +110,14 @@ func Convert_v1alpha2_KubeAPIServerConfiguration_To_v1alpha1_KubeAPIServerConfig
 	return autoConvert_v1alpha2_KubeAPIServerConfiguration_To_v1alpha1_KubeAPIServerConfiguration(in, out, s)
 }
 
+func Convert_v1alpha2_KubeControllerManagerConfiguration_To_v1alpha1_KubeControllerManagerConfiguration(in *v1alpha2.KubeControllerManagerConfiguration, out *KubeControllerManagerConfiguration, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KubeControllerManagerConfiguration_To_v1alpha1_KubeControllerManagerConfiguration(in, out, s)
+}
+
+func Convert_v1alpha2_KubeSchedulerConfiguration_To_v1alpha1_KubeSchedulerConfiguration(in *v1alpha2.KubeSchedulerConfiguration, out *KubeSchedulerConfiguration, s conversion.Scope) error {
+	return autoConvert_v1alpha2_KubeSchedulerConfiguration_To_v1alpha1_KubeSchedulerConfiguration(in, out, s)
+}
+
 func Convert_v1alpha1_NodeConfiguration_To_v1alpha2_NodeConfiguration(in *NodeConfiguration, out *v1alpha2.NodeConfiguration, s conversion.Scope) error {
 	// KubeProxyMode moved to ControlPlaneConfiguration and conversion is
 	// handled there
