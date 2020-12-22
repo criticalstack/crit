@@ -3,7 +3,6 @@ package cluster
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -29,13 +28,10 @@ func (c *Cluster) DeployCoreDNS(ctx context.Context, cfg *config.ControlPlaneCon
 }
 
 func (c *Cluster) DeployKubeProxy(ctx context.Context, cfg *config.ControlPlaneConfiguration) error {
-	fmt.Println("deploying kube proxy")
 	if cfg.KubeProxyConfiguration.Disabled {
 		log.Debug("kube-proxy disabled")
 		return nil
 	}
-	log.Info("JSLKDGJHLKJSHGD")
-	log.Info(cfg.KubeProxyConfiguration.ExtraLabels["it"])
 	log.Info("kube-proxy", zap.String("description", "deploy kube-proxy"))
 	cm, err := components.NewKubeProxyConfigMap(cfg)
 	if err != nil {

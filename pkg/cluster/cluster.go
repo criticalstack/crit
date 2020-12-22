@@ -4,7 +4,6 @@ package cluster
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"time"
 
@@ -67,7 +66,6 @@ type (
 // RunControlPlane creates a new control plane node.
 func RunControlPlane(ctx context.Context, rc *RuntimeConfig, cfg *config.ControlPlaneConfiguration) error {
 	c := New(filepath.Join(cfg.NodeConfiguration.KubeDir, "admin.conf"), rc)
-	fmt.Println("starting control plane")
 
 	// set crit feature gates
 	if err := feature.MutableGates.SetFromMap(cfg.FeatureGates); err != nil {
