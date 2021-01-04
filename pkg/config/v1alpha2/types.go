@@ -219,7 +219,8 @@ type KubeProxyConfiguration struct {
 	// in the future.
 	//
 	// https://github.com/kubernetes-sigs/controller-tools/issues/245
-	Config   *kubeproxyconfigv1alpha1.KubeProxyConfiguration `json:"config,omitempty"`
-	Disabled bool                                            `json:"disabled"`
-	Affinity *corev1.Affinity                                `json:"affinity,omitempty"`
+	Config      *kubeproxyconfigv1alpha1.KubeProxyConfiguration `json:"config,omitempty"`
+	Disabled    bool                                            `json:"disabled"`
+	Affinity    *corev1.Affinity                                `json:"affinity,omitempty"`
+	ExtraLabels map[string]string                               `json:"extraLabels,omitempty"`
 }
