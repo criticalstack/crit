@@ -15,7 +15,7 @@ import (
 )
 
 var opts struct {
-	CertDir string
+	KubeDir string
 }
 
 func NewCommand() *cobra.Command {
@@ -51,7 +51,7 @@ func NewCommand() *cobra.Command {
 			}, "\t"))
 
 			for caName := range certTree {
-				ca, err := pki.LoadCertificateAuthority(opts.CertDir, caName)
+				ca, err := pki.LoadCertificateAuthority(filepath.Join(opts.KubeDir, "pki"), caName)
 				if err != nil {
 					return err
 				}
@@ -74,7 +74,7 @@ func NewCommand() *cobra.Command {
 			}, "\t"))
 			for _, certs := range certTree {
 				for _, certName := range certs {
-					cert, err := pki.ReadCertFromFile(filepath.Join(opts.CertDir, certName+".crt"))
+					cert, err := pki.ReadCertFromFile(filepath.Join(opts.KubeDir, "pki", certName+".crt"))
 					if err != nil {
 						return err
 					}
@@ -90,7 +90,7 @@ func NewCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.CertDir, "cert-dir", filepath.Join(constants.DefaultKubeDir, "pki"), "")
+	cmd.Flags().StringVar(&opts.KubeDir, "kube-dir", constants.DefaultKubeDir, "")
 	return cmd
 }
 
