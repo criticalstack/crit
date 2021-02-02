@@ -102,6 +102,6 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.DryRun, "dry-run", false, "")
-	cmd.Flags().StringVar(&opts.KubeDir, "kube-dir", constants.DefaultKubeDir, "")
+	cmd.Flags().StringVar(&opts.KubeDir, "kube-dir", constants.DefaultKubeDir, "renews ./*.conf and ./pki/*.crt for the specified --kube-dir")
 	return cmd
 }
