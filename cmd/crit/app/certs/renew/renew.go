@@ -12,7 +12,7 @@ import (
 )
 
 var opts struct {
-	CertDir string
+	KubeDir string
 	DryRun  bool
 }
 
@@ -35,12 +35,12 @@ func NewCommand() *cobra.Command {
 				},
 			}
 			for caName, certs := range certTree {
-				ca, err := pki.LoadCertificateAuthority(opts.CertDir, caName)
+				ca, err := pki.LoadCertificateAuthority(filepath.Join(opts.KubeDir, "pki"), caName)
 				if err != nil {
 					return err
 				}
 				for _, certName := range certs {
-					cert, err := pki.ReadCertFromFile(filepath.Join(opts.CertDir, certName+".crt"))
+					cert, err := pki.ReadCertFromFile(filepath.Join(opts.KubeDir, "pki", certName+".crt"))
 					if err != nil {
 						return err
 					}
@@ -57,7 +57,7 @@ func NewCommand() *cobra.Command {
 						return err
 					}
 					if !opts.DryRun {
-						if err := kp.WriteFiles(opts.CertDir); err != nil {
+						if err := kp.WriteFiles(filepath.Join(opts.KubeDir, "pki")); err != nil {
 							return err
 						}
 					}
@@ -69,7 +69,7 @@ func NewCommand() *cobra.Command {
 				"scheduler.conf",
 			}
 			for _, configName := range kubeconfigs {
-				config, err := clientcmd.LoadFromFile(filepath.Join(opts.CertDir, configName))
+				config, err := clientcmd.LoadFromFile(filepath.Join(opts.KubeDir, configName))
 				if err != nil {
 					return err
 				}
@@ -77,7 +77,7 @@ func NewCommand() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				ca, err := pki.LoadCertificateAuthority(opts.CertDir, "ca")
+				ca, err := pki.LoadCertificateAuthority(filepath.Join(opts.KubeDir, "pki"), "ca")
 				if err != nil {
 					return err
 				}
@@ -92,7 +92,7 @@ func NewCommand() *cobra.Command {
 				config.AuthInfos[config.Contexts[config.CurrentContext].AuthInfo].ClientCertificateData = pki.EncodeCertPEM(kp.Cert)
 				config.AuthInfos[config.Contexts[config.CurrentContext].AuthInfo].ClientKeyData = pki.MustEncodePrivateKeyPem(kp.Key)
 				if !opts.DryRun {
-					if err := kubeconfig.WriteToFile(config, filepath.Join(opts.CertDir, configName)); err != nil {
+					if err := kubeconfig.WriteToFile(config, filepath.Join(opts.KubeDir, configName)); err != nil {
 						return err
 					}
 				}
@@ -102,6 +102,6 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.DryRun, "dry-run", false, "")
-	cmd.Flags().StringVar(&opts.CertDir, "cert-dir", filepath.Join(constants.DefaultKubeDir, "pki"), "")
+	cmd.Flags().StringVar(&opts.KubeDir, "kube-dir", constants.DefaultKubeDir, "renews ./*.conf and ./pki/*.crt for the specified --kube-dir")
 	return cmd
 }
