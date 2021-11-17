@@ -1,3 +1,5 @@
+# Due to changes in the priorities, this project is currently not being supported. The project is archived as of 11/16/21 and will be available in a read-only state. Please note, since archival, the project is not maintained or reviewed. #
+
 [![Build Status](https://cloud.drone.io/api/badges/criticalstack/crit/status.svg)](https://cloud.drone.io/criticalstack/crit)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/criticalstack/crit)](https://pkg.go.dev/github.com/criticalstack/crit)
 
